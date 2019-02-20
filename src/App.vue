@@ -1,7 +1,7 @@
 <template>
   <div class="appWrapper">
       <Claim/>
-      <SearchInput/>
+      <SearchInput v-model="searchValue" @input="handleInput"/>
       <HeroImage/>
   </div>
 </template>
@@ -10,14 +10,33 @@
 import HeroImage from '@/components/HeroImage.vue'
 import Claim from '@/components/Claim.vue'
 import SearchInput from '@/components/SearchInput.vue'
+import debounce from 'lodash.debounce'
+const axios = require('axios');
+const API = 'https://images-api.nasa.gov/search';
 export default {
     name: "App",
     components: {
       Claim,
       SearchInput,
       HeroImage,
-    }
-}
+    },
+    data() {
+      return {
+        searchValue : '',
+        results: [],
+      }
+    },
+    methods : {
+      handleInput: debounce(function(){
+      axios.get(`${API}?q=${this.searchValue}&media_type=image`)
+      .then((response) => {
+        console.log(response);
+        this.results = response.data.collection.items;
+      })
+      },500),
+
+    },
+};
 </script>
 
 <style lang="scss">

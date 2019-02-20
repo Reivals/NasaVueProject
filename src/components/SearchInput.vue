@@ -1,15 +1,28 @@
 <template>
     <div class="searchInputWrapper">
-      <input name="search" 
+      <input 
+      name="search" 
       id="search" 
-      v-model="searchValue" 
-      @input="handleInput"/>
+      :value="value"
+      @input="handleChange"
+      />
     </div>
 </template>
 
 <script>
 export default {
     name: "SearchInput",
+    props: {
+      value: {
+        type: String,
+        required: true,
+      },
+    },
+    methods: {
+      handleChange(e){
+        this.$emit('input', e.target.value);
+      },
+    }
 }
 </script>
 
